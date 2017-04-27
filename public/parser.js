@@ -16,7 +16,7 @@
   };
 
   String.prototype.tokens = function() {
-    var RESERVED_WORD, from, getTok, i, key, m, make, n, result, rw, tokens, value;
+    var RESERVED_WORD, BOOLEAN, from, getTok, i, key, m, make, n, result, rw, tokens, value, b;
     from = void 0;
     i = 0;
     n = void 0;
@@ -37,8 +37,15 @@
     RESERVED_WORD = {
       p: "P",
       "if": "IF",
-      then: "THEN"
+      "then": "THEN",
+      "else": "ELSE"
     };
+    
+    BOOLEAN = {
+      "true": "TRUE",
+      "false": "FALSE"
+    };
+    
     make = function(type, value) {
       return {
         type: type,
@@ -66,8 +73,11 @@
         getTok();
       } else if (m = tokens.ID.bexec(this)) {
         rw = RESERVED_WORD[m[0]];
+        b = BOOLEAN[m[0]];
         if (rw) {
           result.push(make(rw, getTok()));
+        }else if(b){
+           result.push(make("BOOLEAN", eval(getTok())))
         } else {
           result.push(make("ID", getTok()));
         }
